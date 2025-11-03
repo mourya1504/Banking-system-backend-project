@@ -1,13 +1,18 @@
-package com.bank.account_service.controller;
+package com.bank.account_service.Controller;
 
 import com.bank.account_service.dto.*;
 import com.bank.account_service.service.AccountService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
+import com.bank.account_service.entity.AccountResponse;
 
 @RestController
 @RequestMapping("/api/accounts")

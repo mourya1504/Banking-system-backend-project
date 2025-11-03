@@ -3,11 +3,14 @@ package com.bank.account_service.dto;
 
 
 // import com.bank.account_service.entity.AccountType;
-import jakarta.validation.constraints.*;
-import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import com.bank.account_service.entity.AccountStatus;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+//import com.bank.account_service.entity.AccountStatus;
 
 @Data
 public class CreateAccountRequest {
@@ -32,7 +35,7 @@ class AccountResponse {
     private Long customerId;
     private String accountType; // Use String to represent account type
     private BigDecimal balance;
-    public  AccountStatus status;
+    public  String status;
     private String currency;
     private LocalDateTime createdAt;
 }
