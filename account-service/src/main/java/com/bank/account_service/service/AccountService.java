@@ -4,6 +4,7 @@ import com.bank.account_service.dto.*;
 import com.bank.account_service.entity.Account;
 //import com.bank.account_service.entity.AccountStatus;
 //import com.bank.account_service.exception.InsufficientBalanceException;
+import com.bank.account_service.Exception.InvalidAccountException;
 import com.bank.account_service.repository.AccountRepository;
 import com.bank.account_service.event.AccountEvent;
 
@@ -54,7 +55,7 @@ public class AccountService {
     @Cacheable(value = "accounts", key = "#accountNumber")
     public AccountResponse getAccount(String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountNotFoundException("Account not found: " + accountNumber));
+                .orElseThrow(() -> new InvalidAccountException("Account not found: " + accountNumber));
         return toResponse(account);
     }
     

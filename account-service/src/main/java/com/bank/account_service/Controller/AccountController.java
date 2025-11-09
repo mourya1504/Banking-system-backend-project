@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import com.bank.account_service.entity.AccountResponse;
+import com.bank.account_service.entity.BalanceUpdateRequest;
 
 @RestController
 @RequestMapping("/api/accounts")
