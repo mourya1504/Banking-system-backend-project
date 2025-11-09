@@ -2,9 +2,6 @@ package com.bank.account_service.service;
 
 import com.bank.account_service.dto.*;
 import com.bank.account_service.entity.Account;
-//import com.bank.account_service.entity.AccountStatus;
-//import com.bank.account_service.exception.InsufficientBalanceException;
-import com.bank.account_service.Exception.InvalidAccountException;
 import com.bank.account_service.repository.AccountRepository;
 import com.bank.account_service.event.AccountEvent;
 
@@ -22,6 +19,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.bank.account_service.entity.AccountResponse;
+import com.bank.account_service.entity.AccountStatus;
+import com.bank.account_service.entity.AccountType;
+
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +35,11 @@ public class AccountService {
     @CacheEvict(value = "accounts", allEntries = true)
     public AccountResponse createAccount(CreateAccountRequest request) {
         String accountNumber = generateAccountNumber();
+        String customerId = generateCustomerId();
         
         Account account = Account.builder()
                 .accountNumber(accountNumber)
-                .customerId(request.getCustomerId())
+                .customerId(customerId)
                 .accountType(request.getAccountType())
                 .balance(request.getInitialDeposit())
                 .status(AccountStatus.ACTIVE)

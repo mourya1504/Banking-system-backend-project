@@ -67,11 +67,3 @@ public class Account {
         updatedAt = LocalDateTime.now();
     }
 }
-
-enum AccountType {
-    SAVINGS, CHECKING, FIXED_DEPOSIT, CURRENT
-}
-
- enum AccountStatus {
-    ACTIVE, INACTIVE, BLOCKED, CLOSED
-}
