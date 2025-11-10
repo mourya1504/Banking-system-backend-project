@@ -13,7 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.bank.account_service.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +21,9 @@ import java.util.UUID;
 import com.bank.account_service.entity.AccountResponse;
 import com.bank.account_service.entity.AccountStatus;
 import com.bank.account_service.entity.AccountType;
+import com.bank.account_service.exception.AccountNotFoundException;
+import com.bank.account_service.exception.InsufficientBalanceException;
+import com.bank.account_service.exception.InvalidAccountException;
 
 
 @Service
@@ -35,11 +38,9 @@ public class AccountService {
     @CacheEvict(value = "accounts", allEntries = true)
     public AccountResponse createAccount(CreateAccountRequest request) {
         String accountNumber = generateAccountNumber();
-        String customerId = generateCustomerId();
-        
         Account account = Account.builder()
                 .accountNumber(accountNumber)
-                .customerId(customerId)
+                .customerId(request.getCustomerId())
                 .accountType(request.getAccountType())
                 .balance(request.getInitialDeposit())
                 .status(AccountStatus.ACTIVE)

@@ -20,7 +20,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+@Data  // ← This generates ALL getters and setters
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateAccountRequest {
     @NotNull
     private Long customerId;

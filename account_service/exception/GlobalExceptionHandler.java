@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.security.auth.login.AccountNotFoundException;
-
 import org.springframework.web.ErrorResponse;
 
 @RestControllerAdvice
