@@ -1,6 +1,8 @@
 package com.bank.account_service.exception;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.web.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
@@ -25,7 +23,7 @@ public class GlobalExceptionHandler {
             AccountNotFoundException ex, WebRequest request) {
         log.error("Account not found: {}", ex.getMessage());
         
-        ErrorResponse errorResponse = ErrorResponse.builder()
+        ErrorResponse errorResponse = ErrorResponse.builder(ex, HttpStatus.NOT_FOUND, ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
                 .error("Not Found")
@@ -41,7 +39,7 @@ public class GlobalExceptionHandler {
             InsufficientBalanceException ex, WebRequest request) {
         log.error("Insufficient balance: {}", ex.getMessage());
         
-        ErrorResponse errorResponse = ErrorResponse.builder(ex,null)
+        ErrorResponse errorResponse = ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Bad Request")
@@ -57,7 +55,7 @@ public class GlobalExceptionHandler {
             InvalidAccountException ex, WebRequest request) {
         log.error("Invalid account: {}", ex.getMessage());
         
-        ErrorResponse errorResponse = ErrorResponse.builder()
+        ErrorResponse errorResponse = ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Bad Request")
@@ -78,13 +76,13 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        ErrorResponse errorResponse = ErrorResponse.builder()
+        ErrorResponse errorResponse = ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST,ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Validation Failed")
                 .message("Invalid input data")
                 .path(request.getDescription(false).replace("uri=", ""))
-                .validationErrors(errors)
+                //.validationErrors(errors)
                 .build();
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -95,14 +93,13 @@ public class GlobalExceptionHandler {
             Exception ex, WebRequest request) {
         log.error("Unexpected error occurred: ", ex);
         
-        ErrorResponse errorResponse = ErrorResponse.builder()
+        ErrorResponse errorResponse = ErrorResponse.builder(ex, HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error("Internal Server Error")
                 .message("An unexpected error occurred. Please try again later.")
                 .path(request.getDescription(false).replace("uri=", ""))
                 .build();
-        
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

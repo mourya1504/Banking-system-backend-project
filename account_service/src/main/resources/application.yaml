@@ -54,11 +54,10 @@ management:
     web:
       exposure:
         include: health,info,metrics,prometheus
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
-
 logging:
   level:
     com.bank: DEBUG
