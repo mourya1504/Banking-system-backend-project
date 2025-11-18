@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
             InsufficientBalanceException ex, WebRequest request) {
         log.error("Insufficient balance: {}", ex.getMessage());
         
-        ErrorResponse errorResponse = ErrorResponse.builder()
+        ErrorResponse errorResponse = ErrorResponse.builder(ex,null)
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Bad Request")
