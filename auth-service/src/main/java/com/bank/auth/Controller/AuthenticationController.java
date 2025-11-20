@@ -1,16 +1,23 @@
 package com.bank.auth.Controller;
 
-import com.bank.auth.dto.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.bank.auth.dto.AuthenticationRequest;
+import com.bank.auth.dto.AuthenticationResponse;
+import com.bank.auth.dto.ChangePasswordRequest;
+import com.bank.auth.dto.RefreshTokenRequest;
+import com.bank.auth.dto.RegisterRequest;
 import com.bank.auth.service.AuthenticationService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
-import com.bank.auth.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/auth")

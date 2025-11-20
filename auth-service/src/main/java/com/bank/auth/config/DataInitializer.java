@@ -1,16 +1,13 @@
 package com.bank.auth.config;
-
-// File: auth-service/src/main/java/com/bank/auth/config/DataInitializer.java
-
-package com.bank.auth.config;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 import com.bank.auth.entity.Role;
 import com.bank.auth.entity.RoleType;
 import com.bank.auth.repository.RoleRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor

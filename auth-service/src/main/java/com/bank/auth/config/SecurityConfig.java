@@ -15,8 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 
 
@@ -28,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
     
     private final UserDetailsService userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    //private final JwtAuthenticationFilter jwtAuthFilter;
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -68,9 +66,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private static class JwtAuthenticationFilter implements Filter {
+   /*  private static class JwtAuthenticationFilter implements Filter {
 
         public JwtAuthenticationFilter() {
         }
-    }
+    }*/
 }
