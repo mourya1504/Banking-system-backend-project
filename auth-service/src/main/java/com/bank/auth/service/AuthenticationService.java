@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ import java.util.Set;
 public class AuthenticationService {
     
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleRepository roleRepository;  // ← Using RoleRepository
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -31,17 +32,28 @@ public class AuthenticationService {
     
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
+        // Check if username already exists
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new UserAlreadyExistsException("Username already exists");
         }
         
+        // Check if email already exists
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("Email already exists");
         }
         
+        // Get or create CUSTOMER role
         Role customerRole = roleRepository.findByName(RoleType.ROLE_CUSTOMER)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseGet(() -> {
+                    // If role doesn't exist, create it
+                    Role newRole = Role.builder()
+                            .name(RoleType.ROLE_CUSTOMER)
+                            .description("Customer role")
+                            .build();
+                    return roleRepository.save(newRole);
+                });
         
+        // Create new user
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -56,8 +68,10 @@ public class AuthenticationService {
         
         userRepository.save(user);
         
-        var jwtToken = jwtService.generateToken(userDetailsService.loadUserByUsername(user.getUsername()));
-        var refreshToken = jwtService.generateRefreshToken(userDetailsService.loadUserByUsername(user.getUsername()));
+        // Generate tokens
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        var jwtToken = jwtService.generateToken(userDetails);
+        var refreshToken = jwtService.generateRefreshToken(userDetails);
         
         log.info("User registered successfully: {}", user.getUsername());
         
@@ -74,12 +88,14 @@ public class AuthenticationService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid username or password"));
         
+        // Check if account is locked
         if (user.getAccountLockedUntil() != null && 
             user.getAccountLockedUntil().isAfter(LocalDateTime.now())) {
             throw new AccountLockedException("Account is locked. Try again later.");
         }
         
         try {
+            // Attempt authentication
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     request.getUsername(),
@@ -91,6 +107,7 @@ public class AuthenticationService {
             user.setFailedLoginAttempts(0);
             user.setAccountLockedUntil(null);
             user.setLastLoginAt(LocalDateTime.now());
+            user.setStatus(UserStatus.ACTIVE);
             userRepository.save(user);
             
         } catch (BadCredentialsException e) {
@@ -98,6 +115,7 @@ public class AuthenticationService {
             throw new InvalidCredentialsException("Invalid username or password");
         }
         
+        // Generate tokens
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         var jwtToken = jwtService.generateToken(userDetails);
         var refreshToken = jwtService.generateRefreshToken(userDetails);

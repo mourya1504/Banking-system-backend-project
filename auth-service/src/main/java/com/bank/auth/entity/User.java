@@ -1,10 +1,30 @@
+// File: auth-service/src/main/java/com/bank/auth/entity/User.java
+
 package com.bank.auth.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users", indexes = {
@@ -16,6 +36,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class User {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,6 +63,7 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
     
     private int failedLoginAttempts;
@@ -58,37 +80,13 @@ public class User {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        status = UserStatus.ACTIVE;
+        if (status == null) {
+            status = UserStatus.ACTIVE;
+        }
     }
     
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-}
-
-@Entity
-@Table(name = "roles")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(unique = true)
-    private RoleType name;
-    
-    private String description;
-}
-
-enum RoleType {
-    ROLE_CUSTOMER, ROLE_ADMIN, ROLE_MANAGER, ROLE_SUPPORT
-}
-
-enum UserStatus {
-    ACTIVE, INACTIVE, LOCKED, SUSPENDED
 }

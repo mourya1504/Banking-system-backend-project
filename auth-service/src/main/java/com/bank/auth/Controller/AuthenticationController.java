@@ -1,12 +1,16 @@
-package com.bank.auth.controller;
+package com.bank.auth.Controller;
 
 import com.bank.auth.dto.*;
 import com.bank.auth.service.AuthenticationService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import com.bank.auth.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/auth")
