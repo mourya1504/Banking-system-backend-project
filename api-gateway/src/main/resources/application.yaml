@@ -61,11 +61,10 @@ management:
     web:
       exposure:
         include: health,info,metrics,prometheus,gateway
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
-
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
