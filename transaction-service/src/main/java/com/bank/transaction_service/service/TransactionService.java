@@ -1,5 +1,7 @@
 package com.bank.transaction_service.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -11,12 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bank.transaction_service.Client.AccountServiceClient;
 import com.bank.transaction_service.Entity.Transaction;
 import com.bank.transaction_service.Entity.TransactionStatus;
+import com.bank.transaction_service.Entity.TransactionType;
 import com.bank.transaction_service.Event.TransactionEvent;
 import com.bank.transaction_service.Exception.TransactionFailedException;
 import com.bank.transaction_service.Repository.TransactionRepository;
 import com.bank.transaction_service.dto.BalanceUpdateRequest;
 import com.bank.transaction_service.dto.TransactionRequest;
 import com.bank.transaction_service.dto.TransactionResponse;
+import com.bank.transaction_service.dto.TransactionStatementResponse;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -118,7 +122,7 @@ public class TransactionService {
         return transactionRepository.findByAccountNumber(accountNumber, pageable)
                 .map(this::toResponse);
     }
-    /* 
+    
     public TransactionStatementResponse getStatement(String accountNumber, 
                                                       LocalDateTime startDate, 
                                                       LocalDateTime endDate) {
@@ -147,7 +151,7 @@ public class TransactionService {
                 .totalWithdrawals(totalWithdrawals)
                 .transactionCount(transactions.size())
                 .build();
-    }*/
+    }
     
     private String generateTransactionId() {
         return "TXN" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8).toUpperCase();

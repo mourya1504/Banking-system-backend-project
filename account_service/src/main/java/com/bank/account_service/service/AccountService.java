@@ -1,29 +1,27 @@
 package com.bank.account_service.service;
 
-import com.bank.account_service.dto.*;
-import com.bank.account_service.entity.Account;
-import com.bank.account_service.repository.AccountRepository;
-import com.bank.account_service.event.AccountEvent;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.bank.account_service.*;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
 
+import com.bank.account_service.dto.CreateAccountRequest;
+import com.bank.account_service.entity.Account;
 import com.bank.account_service.entity.AccountResponse;
 import com.bank.account_service.entity.AccountStatus;
-import com.bank.account_service.entity.AccountType;
+import com.bank.account_service.event.AccountEvent;
 import com.bank.account_service.exception.AccountNotFoundException;
 import com.bank.account_service.exception.InsufficientBalanceException;
 import com.bank.account_service.exception.InvalidAccountException;
+import com.bank.account_service.repository.AccountRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Service
@@ -89,6 +87,7 @@ public class AccountService {
         return "ACC" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
     }
     
+    @SuppressWarnings("null")
     private void publishEvent(String eventType, Account account) {
         AccountEvent event = AccountEvent.builder()
                 .eventType(eventType)

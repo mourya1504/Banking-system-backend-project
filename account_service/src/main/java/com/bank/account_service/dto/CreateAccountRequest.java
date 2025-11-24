@@ -5,16 +5,14 @@ package com.bank.account_service.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.*;
-import com.bank.account_service.entity.AccountType;  // ← Import enum
-import com.bank.account_service.entity.AccountStatus; 
-
 import com.bank.account_service.entity.Account;
+import com.bank.account_service.entity.AccountStatus;
+import com.bank.account_service.entity.AccountType;
 
-
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;  // ← Import enum
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +35,7 @@ public class CreateAccountRequest {
     
     @NotBlank
     @Size(min=3, max=3, message="Currency must be 3 characters")
-    private String currency = "USD";
+    private String currency;
 
 }
 
