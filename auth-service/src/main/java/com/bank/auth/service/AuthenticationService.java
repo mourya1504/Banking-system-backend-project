@@ -28,7 +28,7 @@ public class AuthenticationService {
     private final UserDetailsServiceImpl userDetailsService;
     
     private static final int MAX_LOGIN_ATTEMPTS = 5;
-    private static final long LOCK_TIME_DURATION = 15 * 60 * 1000; // 15 minutes
+    //private static final long LOCK_TIME_DURATION = 15 * 60 * 1000; // 15 minutes
     
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {

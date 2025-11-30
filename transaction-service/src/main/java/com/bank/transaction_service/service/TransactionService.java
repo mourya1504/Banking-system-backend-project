@@ -185,9 +185,9 @@ public class TransactionService {
                 .failureReason(transaction.getFailureReason())
                 .build();
     }
-    
+    /* 
     private TransactionResponse transactionFallback(TransactionRequest request, Exception e) {
         log.error("Circuit breaker activated for transaction", e);
         throw new TransactionFailedException("Service temporarily unavailable. Please try again later.");
-    }
+    }*/
 }
